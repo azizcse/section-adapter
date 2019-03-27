@@ -10,9 +10,15 @@ import android.widget.TextView;
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    interface Listener{
+        void onMenuClicked(String title);
+    }
+
+    private Listener menuListener;
     private List<String> stringList;
-    public MenuAdapter(List<String> list){
+    public MenuAdapter(List<String> list, Listener listener){
         stringList = list;
+        menuListener = listener;
     }
     @NonNull
     @Override
@@ -32,11 +38,21 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return stringList.size();
     }
 
-    private class MenuHolder extends RecyclerView.ViewHolder{
+
+    private String getItem(int pos){
+        return stringList.get(pos);
+    }
+    private class MenuHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         private TextView menuTv;
         public MenuHolder(@NonNull View itemView) {
             super(itemView);
             menuTv = itemView.findViewById(R.id.menu_tv);
+            menuTv.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            menuListener.onMenuClicked(getItem(getAdapterPosition()));
         }
     }
 }
