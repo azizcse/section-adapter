@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,6 +141,36 @@ public class SectionedRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
+    public int getSectionPosition(int position) {
+        for (int i = 0; i < mSections.size(); i++) {
+            int key = mSections.keyAt(i);
+            Section obj = mSections.get(key);
+            if (i < mSections.size() - 1) {
+
+                int nextKey = mSections.keyAt(i + 1);
+                Section nextSection = mSections.get(nextKey);
+                if (position >= obj.sectionedPosition && position < nextSection.sectionedPosition) {
+                    return i;
+                }
+            } else {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int getSectionPosition(String sectionName) {
+        Log.e("Section_size", "Size =" + mSections.size());
+        for (int i = 0; i < mSections.size(); i++) {
+            int key = mSections.keyAt(i);
+            Section obj = mSections.get(key);
+
+            if (sectionName.equals(obj.title)) {
+                return obj.sectionedPosition;
+            }
+        }
+        return -1;
+    }
 
     public void setSections(Section[] sections) {
         mSections.clear();
